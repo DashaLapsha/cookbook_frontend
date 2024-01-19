@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { AuthContext } from '../../contexts/AuthContext';
-import Logout from '../Authentication/Logout';
+import { AuthContext } from '../contexts/AuthContext';
+import Logout from './Authentication/Logout';
 
 const Home: React.FC = () => {
   const { user, isAuthenticated } = useContext(AuthContext) ?? { user: null, isAuthenticated: false };
@@ -16,12 +16,9 @@ const Home: React.FC = () => {
         </div>
       ) : (
         <div>
-          <p>Please login or sign up to continue</p>
-          <Link to="/login">
-            <button>Login</button>
-          </Link>
-          <Link to="/register">
-            <button>Sign Up</button>
+          <p>Please sign in to continue</p>
+          <Link to="/auth">
+            <button>Sign In</button>
           </Link>
         </div>
       )}

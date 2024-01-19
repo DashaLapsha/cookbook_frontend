@@ -7,6 +7,7 @@ const Register: React.FC = () => {
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
   const [message, setMessage] = useState("");
+  const [isRegistered, setIsRegistered] = useState(false);
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
@@ -15,6 +16,7 @@ const Register: React.FC = () => {
     register(username, email, password1, password2).then(
       () => {
         setMessage("We have sent an email. Please check your inbox to verify your account.");
+        setIsRegistered(true);
       },
       (error) => {
         const resMessage =
@@ -30,32 +32,32 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="register-form">
-      <form onSubmit={handleRegister}>
-        <label>Username</label>
-        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-
-        <label>Email</label>
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-
-        <label>Password</label>
-        <input type="password" value={password1} onChange={(e) => setPassword1(e.target.value)} />
-
-        <label>Confirm Password</label>
-        <input type="password" value={password2} onChange={(e) => setPassword2(e.target.value)} />
-
-        <button type="submit">Register</button>
-      </form>
-
-      {message && (
-        <div className="form-group">
-          <div className="alert alert-danger" role="alert">
-            {message}
-          </div>
+    <div className="form-container sign-up-container">
+      {!isRegistered ? (
+        <form onSubmit={handleRegister}>
+        <h1>Create Account</h1>
+        <div className="social-container">
+          <a href="#" className="social"><i className="fab fa-facebook-f"></i></a>
+          <a href="#" className="social"><i className="fab fa-google-plus-g"></i></a>
+          <a href="#" className="social"><i className="fab fa-linkedin-in"></i></a>
         </div>
-      )}
-    </div>
-  );
-};
+        <span>or use your email for registration</span>
+        <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input type="password" placeholder="Password" value={password1} onChange={(e) => setPassword1(e.target.value)} />
+        <input type="password" placeholder="Confirm Password" value={password2} onChange={(e) => setPassword2(e.target.value)} />
+        <button type="submit">Sign Up</button>
+      </form>
+      ) : (
+            <div className="form-group">
+              <div className="alert alert-success" role="alert">
+                {message}
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    };
+      
 
 export default Register;

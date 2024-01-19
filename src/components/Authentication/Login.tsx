@@ -9,7 +9,6 @@ interface User {
 }
 
 const Login: React.FC = () => {
-  const [username, setUsername] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const navigate = useNavigate();
@@ -18,8 +17,7 @@ const Login: React.FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const user = await loginUser(username, email, password);
-      console.log('Successfully logged in. User:', user);
+      const user = await loginUser(email, password);
   
       login(user);
       navigate('/');
@@ -29,37 +27,21 @@ const Login: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleLogin}>
-      <h2>Login</h2>
-      <div>
-        <label>Username:</label>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-      </div>
-      <div>
-        <label>Email:</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-      </div>
-      <div>
-        <label>Password:</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-      </div>
-      <button type="submit">Login</button>
-    </form>
+    <div className="form-container sign-in-container">
+		<form onSubmit={handleLogin}>
+			<h1>Sign in</h1>
+			<div className="social-container">
+				<a href="#" className="social"><i className="fab fa-facebook-f"></i></a>
+				<a href="#" className="social"><i className="fab fa-google-plus-g"></i></a>
+				<a href="#" className="social"><i className="fab fa-linkedin-in"></i></a>
+			</div>
+			<span>or use your account</span>
+			<input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+			<input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+			<a href="#">Forgot your password?</a>
+			<button type="submit">Sign In</button>
+		</form>
+	</div>
   );
 };
 
