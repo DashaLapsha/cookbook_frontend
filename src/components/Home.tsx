@@ -1,29 +1,15 @@
-import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
-import { AuthContext } from '../contexts/AuthContext';
-import Logout from './Authentication/Logout';
+import React from 'react';
 
 const Home: React.FC = () => {
-  const { user, isAuthenticated } = useContext(AuthContext) ?? { user: null, isAuthenticated: false };
-
   return (
-    <div>
-      <h2>Welcome to the Home Page</h2>
-      {isAuthenticated ? (
-        <div>
-          <p>Hello, {user?.username}!</p>
-          <Logout />
-        </div>
-      ) : (
-        <div>
-          <p>Please sign in to continue</p>
-          <Link to="/auth">
-            <button>Sign In</button>
-          </Link>
-        </div>
-      )}
+    <div className="home-container">
+      <div className="home-background">
+        <h1 className="slogan">Explore, Cook, Devour: Your Recipe Haven.</h1>
+        <div className="scroll-indicator">&#9660;</div>
+      </div>
     </div>
   );
 };
 
 export default Home;
+
