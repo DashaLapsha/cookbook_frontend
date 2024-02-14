@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import './header.css';
+import '../css/header.css';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,16 +24,27 @@ const Header = () => {
           <nav className="main-nav">
             <ul>
               <li>
-                <Link to="/">Home</Link>
+                <Link to="/" onClick={() => setIsMenuOpen(false)}>
+                  Home
+                </Link>
               </li>
               <li>
-                <Link to="#">Blog</Link>
+                <Link to="/recipes" onClick={() => setIsMenuOpen(false)}>
+                  Recipes
+                </Link>
               </li>
               <li>
-                <Link to="#">Work</Link>
+                <Link to="/recipes/add" onClick={() => setIsMenuOpen(false)}>
+                  Add Recipe
+                </Link>
               </li>
               <li>
-                <Link to="#">About</Link>
+                <Link to="/auth" onClick={() => setIsMenuOpen(false)}>
+                  Sign In
+                </Link>
+                <Link to="/logout" onClick={() => setIsMenuOpen(false)}>
+                  Logout
+                </Link>
               </li>
             </ul>
           </nav>

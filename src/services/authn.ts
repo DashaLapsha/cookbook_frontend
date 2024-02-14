@@ -18,7 +18,7 @@ export const login = (email: string, password: string) => {
       password,
     })
     .then((response) => {
-      if (response.data.token) {
+      if (response.data.key) {
         localStorage.setItem("user", JSON.stringify(response.data.user));
       }
 

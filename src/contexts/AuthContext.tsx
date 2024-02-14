@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
-    
+
 interface User {
+  id: number;
   username: string;
   email: string;
 }
@@ -23,23 +24,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   useEffect(() => {
-    const handleStorageChange = () => {
-      const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
-  
-      if (storedUser) {
-        setUser(storedUser);
-        setIsAuthenticated(true);
-      } else {
-        setUser(null);
-        setIsAuthenticated(false);
-      }
-    };
-  
-    window.addEventListener('storage', handleStorageChange);
-  
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
+    const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
+    setUser(storedUser);
+    setIsAuthenticated(!!storedUser);
   }, []);
 
   const login = (user: User) => {

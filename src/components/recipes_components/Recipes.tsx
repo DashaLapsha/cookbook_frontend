@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getRecipes } from '../../services/recipes';
-import './recipes.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faClock, faTachometerAlt } from '@fortawesome/free-solid-svg-icons';
+import '../../css/recipes.css';
 
 interface Recipe {
   id: number;
@@ -36,17 +38,24 @@ const Recipes: React.FC = () => {
           <Link key={recipe.id} to={`/recipes/${recipe.id}`}>
             <div className="recipe">
               <h2>{recipe.title}</h2>
-              <p>Estimated Cooking Time: {recipe.prep_time} mins</p>
-              <p>Difficulty: {recipe.diff_lvl}</p>
+              <p>
+                <FontAwesomeIcon icon={faClock} /> {recipe.prep_time} mins
+              </p>
+              <p>
+                <FontAwesomeIcon icon={faTachometerAlt} /> {recipe.diff_lvl}
+              </p>
               {recipe.title_img && <img src={recipe.title_img} alt={recipe.title} />}
             </div>
           </Link>
         ))
       ) : (
-        <p>Loading...</p>
+        <div className="loading-container">
+          <p>Loading...</p>
+        </div>
       )}
     </div>
   );
 };
 
 export default Recipes;
+

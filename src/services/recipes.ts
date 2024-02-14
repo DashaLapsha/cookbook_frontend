@@ -1,12 +1,13 @@
 import { api } from './api';
+import axios from "axios";
 
-interface Recipe {
+export interface Recipe {
   id?: number,
   user?: number;
   title: string;
   prep_time: number;
   diff_lvl: string;
-  title_img?: string;
+  title_img?: File;
   ingredients: {
     ingredient: {
       ingredient_name: string;
@@ -17,7 +18,7 @@ interface Recipe {
   steps: {
     step_number: number;
     description: string;
-    step_img?: string;
+    step_img?: File;
   }[];
 }
 
@@ -29,9 +30,13 @@ export const getRecipe = (id: number) => {
   return api.get(`/recipes/${id}/`);
 };
 
-export const createRecipe = (data: Recipe) => {
-  return api.post('/recipes/', data);
+export const createRecipe = (data: Recipe, userId: number) => {
+  return api.post('/recipes/', {
+    data,
+    user_id: userId,
+  });
 };
+
 
 export const updateRecipe = (id: number, data: Recipe) => {
   return api.put(`/recipes/${id}/`, data);

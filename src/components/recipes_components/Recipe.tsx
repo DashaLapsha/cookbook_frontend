@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getRecipe } from '../../services/recipes';
-import './recipes.css';
+import '../../css/recipes.css';
 
 interface RecipeData {
   id: number;
@@ -36,7 +36,7 @@ const Recipe: React.FC = () => {
   
 
   if (!recipe) {
-    return <div>Loading...</div>;
+    return <div className="loading-container"> <p>Loading...</p> </div>
   }
 
   return (

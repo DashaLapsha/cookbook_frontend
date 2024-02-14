@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import Register from './Register';
 import Login from './Login';
-import './authentication.css';
+import '../../css/authentication.css';
 import { AuthContext } from '../../contexts/AuthContext';
 
 const AuthContainer = () => {
