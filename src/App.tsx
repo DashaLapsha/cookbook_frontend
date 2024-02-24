@@ -7,6 +7,7 @@ import Recipe from './components/recipes_components/Recipe';
 import CreateRecipe from './components/recipes_components/CreateRecipe';
 import { AuthProvider } from './contexts/AuthContext';
 import Header from './components/Header';
+import UserDetails from './components/Authentication/UserDetails';
 import './App.css';
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route path="/recipes/add" element={<CreateRecipe />} />
         <Route path="/auth" element={<AuthContainer />} />
         <Route path="/logout" element={<Logout />} />
+        <Route path="/users/:id" element={<UserDetails />} />
       </Routes>
     </AuthProvider>
   );

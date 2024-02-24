@@ -1,9 +1,10 @@
-import axios from "axios";
+import { api } from './api';
+import Cookies from 'js-cookie';
 
-const API_URL = "http://localhost:8000/users/";
+const AUTH_URL = "/users/";
 
 export const register = (username: string, email: string, password1: string, password2: string) => {
-  return axios.post(API_URL + "register/", {
+  return api.post(`${AUTH_URL}register/`, {
     username,
     email,
     password1,
@@ -12,8 +13,8 @@ export const register = (username: string, email: string, password1: string, pas
 };
 
 export const login = (email: string, password: string) => {
-  return axios
-    .post(API_URL + "login/", {
+  return api
+    .post(`${AUTH_URL}login/`, {
       email,
       password,
     })
@@ -28,7 +29,11 @@ export const login = (email: string, password: string) => {
 
 export const logout = async () => {
   try {
-    await axios.post(API_URL + 'logout/');
+    await api.post(`${AUTH_URL}logout/`, {}, {
+      headers: {
+        'X-CSRFToken': Cookies.get('csrftoken')
+      }
+    });
     localStorage.removeItem('user');
     window.location.href = '/';
   } catch (error) {
@@ -41,4 +46,8 @@ export const getCurrentUser = () => {
   if (userStr) return JSON.parse(userStr);
 
   return null;
+};
+
+export const getUserDetails = (id: number) => {
+  return api.get(`${AUTH_URL}${id}/`);
 };

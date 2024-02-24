@@ -18,12 +18,6 @@ const Login: React.FC = () => {
       } else {
         console.error('AuthContext is not available.');
       }
-      console.log('Login response:', user);
-      
-      // Retrieve data from localStorage and log it
-      const storedUserData = JSON.parse(localStorage.getItem('user') || 'null');
-      console.log('Data stored in localStorage:', storedUserData);
-      
       navigate('/');
     } catch (error) {
       console.error('Login failed:', error);

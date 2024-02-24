@@ -4,8 +4,6 @@ import { AuthContext } from '../contexts/AuthContext';
 const Home: React.FC = () => {
   const { isAuthenticated, user } = useContext(AuthContext) || { isAuthenticated: false, user: null };
 
-  console.log(user); // Add this line to log the user object
-
   return (
     <div className="home-container">
       <div className="home-background">
