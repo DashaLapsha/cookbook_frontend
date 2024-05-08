@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getUserDetails } from '../../services/authn';
 
@@ -30,6 +30,7 @@ const UserDetails = () => {
     <div>
       <h2>User Details</h2>
       <p>Username: {userDetails.username}</p>
+      <img src={userDetails.profile_img} alt="Profile Image" />
       {userDetails.id && <p>User ID: {userDetails.id}</p>}
       {userDetails.email && <p>Email: {userDetails.email}</p>}
       {userDetails.dietary_pref && <p>Dietary Preference: {userDetails.dietary_pref}</p>}

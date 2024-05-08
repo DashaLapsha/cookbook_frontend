@@ -2,7 +2,7 @@ import { api } from './api';
 
 export interface Recipe {
   id?: number,
-  userId?: number;
+  user?: number;
   title: string;
   prep_time: number;
   diff_lvl: string;
@@ -29,8 +29,12 @@ export const getRecipe = (id: number) => {
   return api.get(`/recipes/${id}/`);
 };
 
-export const createRecipe = (data: Recipe) => {
-  return api.post('/recipes/', data);
+export const createRecipe = (data: FormData) => {
+  return api.post('/recipes/', data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 };
 
 

@@ -18,7 +18,7 @@ interface Step {
 }
 
 interface RecipeData {
-  userId?: number;
+  user?: number;
   title: string;
   prep_time: number;
   diff_lvl: string;
@@ -89,27 +89,45 @@ const CreateRecipe: React.FC = () => {
     }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
     try {
       if (!isAuthenticated || !user || !user.id) {
         throw new Error("User is not logged in or missing userId");
       }
-      const userData: RecipeData = { ...recipeData, userId: user.id };
-      console.log("Sending data to backend:", userData); 
-      await createRecipe(userData);
-      navigate('/recipes');
+      const formData = new FormData();
+      for (const key in recipeData) {
+        const value = recipeData[key as keyof RecipeData];
+        if (value !== undefined) {
+          if (key === 'ingredients' || key === 'steps') {
+            formData.append(key, JSON.stringify(value));
+          } else if (key === 'title_img' && value) {
+            const file = value as File; 
+            formData.append(key, file);
+          } else {
+            formData.append(key, typeof value === 'object' ? JSON.stringify(value) : value.toString());
+          }
+        }
+      }
+      formData.append('user', user.id.toString());
+      console.log("Sending data to backend:", formData); 
+      const response = await createRecipe(formData);
+      console.log("Response from backend:", response);
+      // navigate('/recipes');
     } catch (error) {
       console.error('Error creating recipe:', error);
     }
   };
-   
+  
+
 
   return (
     <div>
       {isAuthenticated ? (
         <div>
           <h2>Create Recipe</h2>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} encType="multipart/form-data">
             <label>Title:</label>
             <input type="text" value={recipeData.title} onChange={(e) => handleInputChange('title', e.target.value)} />
 

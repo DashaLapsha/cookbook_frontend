@@ -1,7 +1,10 @@
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import Cookies from 'js-cookie';
 
 const API_URL = 'http://localhost:8000';
+
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = "X-CSRFToken"
 
 export const api = axios.create({
   baseURL: API_URL,

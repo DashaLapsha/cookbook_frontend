@@ -3,14 +3,10 @@ import Cookies from 'js-cookie';
 
 const AUTH_URL = "/users/";
 
-export const register = (username: string, email: string, password1: string, password2: string) => {
-  return api.post(`${AUTH_URL}register/`, {
-    username,
-    email,
-    password1,
-    password2,
-  });
+export const register = (formData: FormData) => {
+  return api.post(`${AUTH_URL}register/`, formData);
 };
+
 
 export const login = (email: string, password: string) => {
   return api
@@ -21,6 +17,11 @@ export const login = (email: string, password: string) => {
     .then((response) => {
       if (response.data.key) {
         localStorage.setItem("user", JSON.stringify(response.data.user));
+        api.get(`${AUTH_URL}csrf/`).then(response => {
+          const csrfToken = response.data.csrfToken;
+          Cookies.set('csrftoken', csrfToken);
+          api.defaults.headers['X-CSRFToken'] = csrfToken;
+        });
       }
 
       return response.data.user;
@@ -29,13 +30,18 @@ export const login = (email: string, password: string) => {
 
 export const logout = async () => {
   try {
+    const csrfToken = Cookies.get('csrftoken') || '';
     await api.post(`${AUTH_URL}logout/`, {}, {
       headers: {
-        'X-CSRFToken': Cookies.get('csrftoken')
+        'X-CSRFToken': csrfToken
       }
     });
+    api.get(`${AUTH_URL}csrf/`).then(response => {
+      const csrfToken = response.data.csrfToken;
+      Cookies.set('csrftoken', csrfToken);
+      api.defaults.headers['X-CSRFToken'] = csrfToken;
+    });
     localStorage.removeItem('user');
-    window.location.href = '/';
   } catch (error) {
     console.error('Logout failed:', error);
   }
