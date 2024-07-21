@@ -1,9 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
 
 body {
-  background: #f6f5f7;
   flex-direction: column;
-  font-family: 'Montserrat', sans-serif;
 }
 
 
@@ -63,7 +61,6 @@ button.ghost {
 }
 
 form {
-	background-color: #FFFFFF;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -74,7 +71,6 @@ form {
 }
   
 input {
-	background-color: #eee;
 	border: none;
 	padding: 12px 15px;
 	margin: 8px 0;

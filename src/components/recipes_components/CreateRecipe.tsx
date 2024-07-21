@@ -1,12 +1,11 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { createRecipe } from '../../services/recipes';
+import { createRecipe, updateRecipe } from '../../services/recipes';
 import { AuthContext } from '../../contexts/AuthContext';
+import '../../css/create_recipe.scss';
 
 interface Ingredient {
-  ingredient: {
-    ingredient_name: string;
-  };
+  ingredient: string;
   amount: number;
   measure: string;
 }
@@ -14,20 +13,27 @@ interface Ingredient {
 interface Step {
   step_number: number;
   description: string;
-  step_img?: File;
+  step_img?: string | File;
 }
 
 interface RecipeData {
-  user?: number;
+  user_id?: number;
   title: string;
   prep_time: number;
   diff_lvl: string;
-  title_img?: File;
+  title_img?: string | File;
   ingredients: Ingredient[];
   steps: Step[];
 }
 
-const CreateRecipe: React.FC = () => {
+interface CreateRecipeProps {
+  recipeData?: RecipeData;
+  isEditMode?: boolean;
+  recipeId?: number;
+  onCancel?: () => void;
+}
+
+const CreateRecipe: React.FC<CreateRecipeProps> = ({ recipeData: initialRecipeData, isEditMode = false, recipeId, onCancel }) => {
   const { isAuthenticated, user } = useContext(AuthContext) || { isAuthenticated: false, user: null };
   const navigate = useNavigate();
   const [recipeData, setRecipeData] = useState<RecipeData>({
@@ -35,9 +41,15 @@ const CreateRecipe: React.FC = () => {
     prep_time: 0,
     diff_lvl: '',
     title_img: undefined,
-    ingredients: [{ ingredient: { ingredient_name: '' }, amount: 0, measure: '' }],
+    ingredients: [{ ingredient: '', amount: 0, measure: '' }],
     steps: [{ step_number: 1, description: '', step_img: undefined }],
   });
+
+  useEffect(() => {
+    if (initialRecipeData) {
+      setRecipeData(initialRecipeData);
+    }
+  }, [initialRecipeData]);
 
   const handleInputChange = (field: keyof RecipeData, value: string | number | File | undefined) => {
     setRecipeData((prevData) => ({ ...prevData, [field]: value }));
@@ -45,7 +57,7 @@ const CreateRecipe: React.FC = () => {
 
   const handleIngredientNameChange = (index: number, value: string) => {
     const newIngredients = [...recipeData.ingredients];
-    newIngredients[index].ingredient.ingredient_name = value;
+    newIngredients[index].ingredient = value;
     setRecipeData((prevData) => ({ ...prevData, ingredients: newIngredients }));
   };
 
@@ -68,17 +80,19 @@ const CreateRecipe: React.FC = () => {
   };
 
   const handleStepImageChange = (index: number, file: File | undefined) => {
-    if (file) {
-      const newSteps = [...recipeData.steps];
-      newSteps[index].step_img = file;
-      setRecipeData((prevData) => ({ ...prevData, steps: newSteps }));
-    }
+    const newSteps = [...recipeData.steps];
+    newSteps[index].step_img = file;
+    setRecipeData((prevData) => ({ ...prevData, steps: newSteps }));
   };
-  
+
+  const handleDifficultyChange = (difficulty: string) => {
+    setRecipeData((prevData) => ({ ...prevData, diff_lvl: difficulty }));
+  };
+
   const addIngredient = () => {
     setRecipeData((prevData) => ({
       ...prevData,
-      ingredients: [...prevData.ingredients, { ingredient: { ingredient_name: '' }, amount: 0, measure: '' }],
+      ingredients: [...prevData.ingredients, { ingredient: '', amount: 0, measure: '' }],
     }));
   };
 
@@ -89,44 +103,71 @@ const CreateRecipe: React.FC = () => {
     }));
   };
 
+  const handleImageClear = (field: keyof RecipeData | keyof Step, index?: number) => {
+    if (index !== undefined) {
+      const newSteps = [...recipeData.steps];
+      newSteps[index].step_img = undefined;
+      setRecipeData((prevData) => ({ ...prevData, steps: newSteps }));
+    } else {
+      setRecipeData((prevData) => ({ ...prevData, [field]: undefined }));
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       if (!isAuthenticated || !user || !user.id) {
         throw new Error("User is not logged in or missing userId");
       }
       const formData = new FormData();
-      for (const key in recipeData) {
-        const value = recipeData[key as keyof RecipeData];
-        if (value !== undefined) {
-          if (key === 'ingredients' || key === 'steps') {
-            formData.append(key, JSON.stringify(value));
-          } else if (key === 'title_img' && value) {
-            const file = value as File; 
-            formData.append(key, file);
-          } else {
-            formData.append(key, typeof value === 'object' ? JSON.stringify(value) : value.toString());
-          }
-        }
-      }
+
       formData.append('user', user.id.toString());
-      console.log("Sending data to backend:", formData); 
-      const response = await createRecipe(formData);
-      console.log("Response from backend:", response);
-      // navigate('/recipes');
+      formData.append('title', recipeData.title);
+      formData.append('prep_time', recipeData.prep_time.toString());
+      formData.append('diff_lvl', recipeData.diff_lvl);
+
+      if (recipeData.title_img && typeof recipeData.title_img !== 'string') {
+        formData.append('title_img', recipeData.title_img);
+      }
+
+      recipeData.ingredients.forEach((ingredient, index) => {
+        formData.append(`ingredients[${index}]ingredient_name`, ingredient.ingredient);
+        formData.append(`ingredients[${index}]amount`, ingredient.amount.toString());
+        formData.append(`ingredients[${index}]measure`, ingredient.measure);
+      });
+
+      recipeData.steps.forEach((step, index) => {
+        formData.append(`steps[${index}]step_number`, step.step_number.toString());
+        formData.append(`steps[${index}]description`, step.description);
+        if (step.step_img && typeof step.step_img !== 'string') {
+          formData.append(`steps[${index}]step_img`, step.step_img);
+        }
+      });
+
+      Array.from(formData.entries()).forEach(([key, value]) => {
+        console.log(`${key}: ${value}`);
+      });
+
+      if (isEditMode && recipeId) {
+        const response = await updateRecipe(recipeId, formData);
+        console.log("Response from backend:", response);
+      } else {
+        const response = await createRecipe(formData);
+        console.log("Response from backend:", response);
+      }
+
+      navigate('/recipes');
     } catch (error) {
       console.error('Error creating recipe:', error);
     }
   };
-  
-
 
   return (
-    <div>
+    <div className="create-recipe-container">
       {isAuthenticated ? (
         <div>
-          <h2>Create Recipe</h2>
+          <h2>{isEditMode ? 'Update Recipe' : 'Create Recipe'}</h2>
           <form onSubmit={handleSubmit} encType="multipart/form-data">
             <label>Title:</label>
             <input type="text" value={recipeData.title} onChange={(e) => handleInputChange('title', e.target.value)} />
@@ -139,70 +180,129 @@ const CreateRecipe: React.FC = () => {
             />
 
             <label>Difficulty Level:</label>
-            <input
-              type="text"
-              value={recipeData.diff_lvl}
-              onChange={(e) => handleInputChange('diff_lvl', e.target.value)}
-            />
+            <div className="difficulty-container">
+              <div
+                className={`difficulty-card ${recipeData.diff_lvl === 'Easy' ? 'selected' : ''}`}
+                onClick={() => handleDifficultyChange('Easy')}
+              >
+                Easy
+              </div>
+              <div
+                className={`difficulty-card ${recipeData.diff_lvl === 'Intermediate' ? 'selected' : ''}`}
+                onClick={() => handleDifficultyChange('Intermediate')}
+              >
+                Intermediate
+              </div>
+              <div
+                className={`difficulty-card ${recipeData.diff_lvl === 'Difficult' ? 'selected' : ''}`}
+                onClick={() => handleDifficultyChange('Difficult')}
+              >
+                Difficult
+              </div>
+            </div>
 
-            <label>Title Image:</label>
-            <input
-              type="file"
-              onChange={(e) => handleInputChange('title_img', e.target.files?.[0])}
-            />
+            <label htmlFor="title_img">Title Image:</label>
+            {recipeData.title_img ? (
+              <div className="image-preview">
+                <img
+                  src={typeof recipeData.title_img === 'string' ? recipeData.title_img : URL.createObjectURL(recipeData.title_img)}
+                  alt="Title"
+                />
+                <button type="button" onClick={() => handleImageClear('title_img')}>Clear</button>
+              </div>
+            ) : (
+              <div className="custom-file-upload">
+                <input 
+                  type="file"
+                  id="title_img"
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files.length > 0) {
+                      handleInputChange('title_img', e.target.files[0]);
+                    }
+                  }}
+                />
+                <p>Drag your image here or click in this area.</p>
+              </div>
+            )}
 
             <h3>Ingredients:</h3>
             {recipeData.ingredients.map((ingredient, index) => (
-              <div key={index}>
-                <label>Ingredient:</label>
-                <input
-                  type="text"
-                  value={ingredient.ingredient.ingredient_name}
-                  onChange={(e) => handleIngredientNameChange(index, e.target.value)}
-                />
+              <div key={index} className="ingredient">
+                <div>
+                  <label>Ingredient:</label>
+                  <input
+                    type="text"
+                    value={ingredient.ingredient}
+                    onChange={(e) => handleIngredientNameChange(index, e.target.value)}
+                  />
+                </div>
 
-                <label>Amount:</label>
-                <input
-                  type="number"
-                  value={ingredient.amount}
-                  onChange={(e) => handleAmountChange(index, parseInt(e.target.value, 10))}
-                />
+                <div>
+                  <label>Amount:</label>
+                  <input
+                    type="number"
+                    value={ingredient.amount}
+                    onChange={(e) => handleAmountChange(index, parseInt(e.target.value, 10))}
+                  />
+                </div>
 
-                <label>Measure:</label>
-                <input
-                  type="text"
-                  value={ingredient.measure}
-                  onChange={(e) => handleMeasureChange(index, e.target.value)}
-                />
+                <div>
+                  <label>Measure:</label>
+                  <input
+                    type="text"
+                    className="measure"
+                    value={ingredient.measure}
+                    onChange={(e) => handleMeasureChange(index, e.target.value)}
+                  />
+                </div>
               </div>
             ))}
-            <button type="button" onClick={addIngredient}>
+            <button type="button" className="add-button" onClick={addIngredient}>
               Add Ingredient
             </button>
 
             <h3>Steps:</h3>
             {recipeData.steps.map((step, index) => (
-              <div key={index}>
+              <div key={index} className="step">
                 <label>Step {step.step_number}:</label>
                 <textarea
                   value={step.description}
                   onChange={(e) => handleStepDescriptionChange(index, e.target.value)}
                 />
-                <input
-                  type="file"
-                  onChange={(e) => handleStepImageChange(index, e.target.files?.[0])}
-                />
+                {step.step_img ? (
+                  <div className="image-preview">
+                    <img 
+                    src={typeof step.step_img === 'string' ? step.step_img : URL.createObjectURL(step.step_img)}
+                    alt={`Step ${step.step_number}`} 
+                  />
+                    <button type="button" onClick={() => handleImageClear('step_img', index)}>Clear</button>
+                  </div>
+                ) : (
+                  <div className="custom-file-upload">
+                    <input 
+                      type="file"
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files.length > 0) {
+                          handleStepImageChange(index, e.target.files[0]);
+                        }
+                      }}
+                    />
+                    <p>Drag your image here or click in this area.</p>
+                  </div>
+                )}
               </div>
             ))}
-            <button type="button" onClick={addStep}>
+            <button type="button" className="add-button" onClick={addStep}>
               Add Step
             </button>
-
-            <button type="submit">Submit</button>
+            <div className="bottom-buttons">
+              <button type="button" className="cancel-button" onClick={onCancel}>Cancel</button>
+              <button type="submit" className="submit-button">{isEditMode ? 'Update Recipe' : 'Create Recipe'}</button>
+            </div>
           </form>
         </div>
       ) : (
-        <div>
+        <div className="login-prompt">
           <p>If you want to add a recipe, please <Link to="/auth">log in</Link>.</p>
         </div>
       )}

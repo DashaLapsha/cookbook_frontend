@@ -1,0 +1,293 @@
+// CREATE RECIPE
+
+.create-recipe-container {
+    margin: 20px auto;
+    width: 60%;
+    margin: 0 auto;
+    padding: 30px 20px;
+    background-color: var(--light-color);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Fredoka One', 'Play', sans-serif;
+  
+    h2 {
+      text-align: center;
+      color: var(--accent-color);
+      margin-bottom: 20px;
+    }
+  
+    form {
+      display: flex;
+      flex-direction: column;
+      padding: 0 90px;
+  
+      label {
+        margin-top: 10px;
+        color: var(--accent-color);
+        font-weight: bold;
+      }
+  
+      .difficulty-container {
+        display: flex;
+        justify-content: space-between;
+        margin: 15px;
+      }
+  
+      .difficulty-card {
+        flex: 1;
+        padding: 10px;
+        margin: 0 5px;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        text-align: center;
+        cursor: pointer;
+        transition: border-color 0.3s ease;
+  
+        &.selected {
+          border-color: var(--accent-color);
+        }
+  
+        &:hover {
+          border-color: var(--primary-color);
+        }
+      }
+  
+      input[type="text"],
+      input[type="number"],
+      input[type="file"],
+      textarea {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(42, 25, 2, 0.1);
+        font-family: 'Play', sans-serif;
+        transition: box-shadow 0.3s ease;
+      }
+  
+      input[type="text"]:focus,
+      input[type="number"]:focus,
+      input[type="file"]:focus,
+      textarea:focus {
+        box-shadow: 0 4px 8px rgba(42, 25, 2, 0.2);
+      }
+  
+      textarea {
+        resize: vertical;
+        min-height: 70px;
+        margin: 15px 0;
+      }
+  
+      .ingredient {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-direction: row;
+  
+        > div {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          padding-right: 10px;
+  
+          &:first-child {
+            flex-grow: 3;
+          }
+  
+          &:nth-child(2) {
+            flex-grow: 1;
+          }
+  
+          &:last-child {
+            flex-grow: 2;
+            padding-right: 0;
+          }
+        }
+  
+        label {
+          margin-bottom: 5px;
+        }
+  
+        input[type="text"],
+        input[type="number"],
+        input[type="text"].measure {
+          width: 100%;
+        }
+      }
+  
+      .add-button {
+        background-color: var(--primary-color);
+        color: var(--light-color);
+        border: none;
+        border-radius: 5px;
+        padding: 10px 15px;
+        margin: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+  
+        &:hover {
+          background-color: var(--accent-color);
+        }
+  
+        &:not(:last-child) {
+          margin-right: 10px;
+        }
+      }
+  
+      .bottom-buttons {
+        padding: 15px 20px;
+        font-size: 1.2em;
+        margin: 40px 0px;
+        align-items: center;
+        justify-content: space-evenly;
+        display: flex;
+        width: 110%;
+      }
+  
+      .cancel-button {
+        color: var(--accent-color);
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        padding: 10px 20px;
+        transition: color 0.3s;
+      }
+      
+      .cancel-button:hover {
+        color: var(--dark-accent-color);
+      }
+  
+      .submit-button {
+        background-color: var(--accent-color);
+        border: none;
+        cursor: pointer;
+        font-size: 15px;
+        padding: 15px 25px;
+        transition: color 0.3s;
+      }
+      
+      .submit-button:hover {
+        background-color: var(--dark-accent-color);
+      }
+  
+      .custom-file-upload {
+        position: relative;
+        width: 100%;
+        height: 100px;
+        border: 4px dashed var(--accent-color);
+        border-radius: 5px;
+        text-align: center;
+        color: var(--accent-color);
+        font-family: Arial, sans-serif;
+        margin: 15px 0;
+  
+        input[type="file"] {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+          opacity: 0;
+          cursor: pointer;
+        }
+  
+        p {
+          margin: 0;
+          line-height: 90px;
+        }
+      }
+  
+      .image-preview {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 15px 0;
+  
+        img {
+          max-width: 100%;
+          max-height: 200px;
+          border-radius: 5px;
+          margin-bottom: 10px;
+        }
+  
+        button {
+          background-color: var(--accent-color);
+          color: var(--light-color);
+          border: none;
+          border-radius: 5px;
+          padding: 5px 10px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+  
+          &:hover {
+            background-color: var(--dark-accent-color);
+          }
+        }
+      }
+  
+      .ingredient-section {
+        margin-bottom: 20px;
+      }
+    }
+  
+    .ingredient,
+    .step,
+    .recipe-info,
+    .recipe-time,
+    .recipe-diff {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      box-sizing: border-box;
+  
+      input[type="text"],
+      input[type="number"],
+      textarea {
+        width: 100%;
+        margin-bottom: 10px;
+        border: none;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(42, 25, 2, 0.1);
+        transition: box-shadow 0.3s ease;
+      }
+  
+      input[type="text"]:focus,
+      input[type="number"]:focus,
+      textarea:focus {
+        box-shadow: 0 4px 8px rgba(42, 25, 2, 0.2);
+      }
+  
+      .step-description textarea {
+        box-shadow: 0 2px 4px rgba(42, 25, 2, 0.1);
+        transition: box-shadow 0.3s ease;
+      }
+  
+      .step-description textarea:focus {
+        box-shadow: 0 4px 8px rgba(42, 25, 2, 0.2);
+      }
+    }
+  
+    .login-prompt {
+      text-align: center;
+      background-color: var(--light-color);
+      padding: 10px;
+      margin: 20px 40px;
+      border-radius: 5px;
+  
+      p {
+        color: var(--primary-color);
+      }
+  
+      a {
+        color: var(--accent-color);
+        text-decoration: none;
+  
+        &:hover {
+          color: var(--dark-accent-color);
+        }
+      }
+    }
+  }
+  
