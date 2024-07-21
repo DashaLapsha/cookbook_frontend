@@ -1,0 +1,92 @@
+body {
+  font-family: 'Cinzel', serif;
+  font-size: 16px;
+  padding-top: 130px;
+  transition: padding-top 0.5s ease;
+}
+
+header {
+  width: 100%;
+  height: 120px;
+  background-color: var(--primary-color);
+  text-align: center;
+  position: fixed;
+  top: 0;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  z-index: 1000;
+}
+
+.sticky-header {
+  height: 70px;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  height: 100%;
+}
+
+.brand-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  flex-grow: 1;
+  transition: all 0.3s ease;
+}
+
+.brand-container h1 {
+  display: flex;
+  align-items: center;
+  font-size: 32px;
+  color: var(--light-color);
+  text-transform: uppercase;
+  font-weight: 100;
+  margin: 0;
+  transition: all 0.3s ease;
+}
+
+.brand-container p {
+  font-size: 15px;
+  color: var(--light-color);
+  margin: 0px;
+  font-weight: 300;
+  transition: all 0.3s ease;
+}
+
+.sticky-header .brand-container h1 {
+  font-size: 22px;
+}
+
+.sticky-header .brand-image {
+  width: 30px;
+}
+
+.brand-image {
+  padding-right: 10px;
+  width: 9%;
+  height: auto;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+}
+
+.nav a,
+.nav .logout-link {
+  color: var(--light-color);
+  margin-left: 20px;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.nav a:hover,
+.nav .logout-link:hover {
+  color: rgb(193, 186, 168);
+}

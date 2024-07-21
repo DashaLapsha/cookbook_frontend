@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { getRecipes } from '../../services/recipes';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock, faTachometerAlt } from '@fortawesome/free-solid-svg-icons';
-import '../../css/recipes.css';
+import '../../css/recipes.scss';
+import placeholderImage from '../../assets/basic-title-image.png';
 
 interface Recipe {
   id: number;
@@ -44,7 +45,12 @@ const Recipes: React.FC = () => {
               <p>
                 <FontAwesomeIcon icon={faTachometerAlt} /> {recipe.diff_lvl}
               </p>
-              {recipe.title_img && <img src={recipe.title_img} alt={recipe.title} />}
+              <div className="recipe-image-container">
+                <img
+                  src={recipe.title_img || placeholderImage}
+                  alt={recipe.title || 'Default Recipe Image'}
+                />
+              </div>
             </div>
           </Link>
         ))
@@ -58,4 +64,5 @@ const Recipes: React.FC = () => {
 };
 
 export default Recipes;
+
 
