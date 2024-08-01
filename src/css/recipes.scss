@@ -15,8 +15,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-  padding: 20px;
-  background-color: var(--background-color);
+  padding: 10px;
 }
 
 .recipe {
@@ -53,6 +52,7 @@
   align-items: center;
   justify-content: center;
   gap: 5px;
+  color: var(--primary-color);
 }
 
 .recipe-image-container {
@@ -72,6 +72,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 0%;
 }
 
 .fa-icon {
@@ -92,10 +93,14 @@ h1, h2 {
   color: var(--accent-color);
 }
 
+p {
+  color: var(--primary-color);
+}
+
 .recipe-container {
   width: 60%;
   margin: 20px auto;
-  padding: 30px 20px 30px 20px;
+  padding:5px 20px 30px 20px;
   align-items: center;
   background-color: var(--light-color);
   border-radius: 10px;
@@ -110,17 +115,41 @@ h1, h2 {
 
 .recipe-title {
   font-size: 3em;
+  margin: 10px;
+}
+
+.recipe-header-actions {
+  display: flex;
+  justify-content: space-between;
+  width: 105%; 
+  font-size: larger; 
 }
 
 .recipe-actions {
   display: flex;
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 
 .edit-button, .delete-button {
   background: none;
+  border-radius: 50%;
+  margin: 10px;
+  height: 40px;
+  width: 40px;
+  color: var(--accent-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  padding: 15px;
   border: none;
-  cursor: pointer;
-  color: var(--primary-color);
+
+  svg {
+    height: 1.5em;
+    width: 1.5em;
+  }
 }
 
 .recipe-info {
@@ -219,4 +248,20 @@ span {
 ol {
   padding-inline-start: 0;
   list-style-position: inside;
+}
+
+.recipe-author {
+  margin-top: 10px;
+  font-size: 1.1rem;
+  color: var(--text-color);
+}
+
+.recipe-author-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.recipe-author-link:hover {
+  text-decoration: underline;
 }

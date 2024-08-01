@@ -2,7 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 import AuthContainer from './components/Authentication/AuthContainer';
 import Recipes from './components/recipes_components/Recipes';
 import Recipe from './components/recipes_components/Recipe';
-import CreateRecipe from './components/recipes_components/CreateRecipe';
+import CreateRecipe from './components/recipes_components/CreateEditRecipe';
 import { AuthProvider } from './contexts/AuthContext';
 import Header from './components/Header';
 import Footer from './components/Footer';

@@ -7,7 +7,6 @@ export const register = (formData: FormData) => {
   return api.post(`${AUTH_URL}register/`, formData);
 };
 
-
 export const login = (email: string, password: string) => {
   return api
     .post(`${AUTH_URL}login/`, {
@@ -56,4 +55,8 @@ export const getCurrentUser = () => {
 
 export const getUserDetails = (id: number) => {
   return api.get(`${AUTH_URL}${id}/`);
+};
+
+export const updateUserDetails = (id: number, data: FormData) => {
+  return api.put(`${AUTH_URL}${id}/`, data);
 };

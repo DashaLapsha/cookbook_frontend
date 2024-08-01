@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { createRecipe, updateRecipe } from '../../services/recipes';
 import { AuthContext } from '../../contexts/AuthContext';
-import '../../css/create_recipe.scss';
+import '../../css/create_edit_recipe.scss';
 
 interface Ingredient {
   ingredient: string;
@@ -166,7 +166,7 @@ const CreateRecipe: React.FC<CreateRecipeProps> = ({ recipeData: initialRecipeDa
   return (
     <div className="create-recipe-container">
       {isAuthenticated ? (
-        <div>
+        <div style={{ width: '80%' }}>
           <h2>{isEditMode ? 'Update Recipe' : 'Create Recipe'}</h2>
           <form onSubmit={handleSubmit} encType="multipart/form-data">
             <label>Title:</label>

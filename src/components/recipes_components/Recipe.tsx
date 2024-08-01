@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getRecipe, getRecipeIngredients, getRecipeSteps, deleteRecipe } from '../../services/recipes';
+import { getUserDetails } from '../../services/authn';
 import { AuthContext } from '../../contexts/AuthContext';
 import '../../css/recipes.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash, faStopwatch, faGauge } from '@fortawesome/free-solid-svg-icons';
-import CreateRecipe from './CreateRecipe';
+import CreateRecipe from './CreateEditRecipe';
 
 interface Ingredient {
   id?: number;
@@ -37,6 +38,7 @@ const Recipe: React.FC = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user } = useContext(AuthContext) || { isAuthenticated: false, user: null };
   const [recipe, setRecipe] = useState<RecipeData | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -55,8 +57,15 @@ const Recipe: React.FC = () => {
           getRecipeSteps(parseInt(id, 10))
         ]);
 
+        const recipeData = recipeResponse.data;
+
+        if (recipeData.user_id) {
+          const userResponse = await getUserDetails(recipeData.user_id);
+          setUsername(userResponse.data.username);
+        }
+
         setRecipe({
-          ...recipeResponse.data,
+          ...recipeData,
           ingredients: ingredientsResponse.data,
           steps: stepsResponse.data,
         });
@@ -70,7 +79,6 @@ const Recipe: React.FC = () => {
 
     fetchRecipe();
   }, [id]);  
-  
 
   const handleDeleteRecipe = async () => {
     if (!id || !isAuthenticated || !user || !user.id) {
@@ -84,7 +92,6 @@ const Recipe: React.FC = () => {
       console.error('Error deleting recipe:', error);
     }
   };
-
 
   if (loading) {
     return (
@@ -120,17 +127,36 @@ const Recipe: React.FC = () => {
         <div className="recipe-container">
           {/* RECIPE HEADER */}
           <div className="recipe-header">
+            <div className="recipe-header-actions">
+              {isAuthenticated && user && recipe.user_id === user.id && (
+                <>
+                  <button onClick={handleDeleteRecipe} className="delete-button">
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
+                  <button onClick={() => setEditMode(true)} className="edit-button">
+                    <FontAwesomeIcon icon={faPen} />
+                  </button>
+                </>
+              )}
+            </div>
             <h1 className="recipe-title">{recipe.title}</h1>
-            {isAuthenticated && user && recipe.user_id === user.id && (
-              <div className="recipe-actions">
-                <button onClick={() => setEditMode(true)} className="edit-button">
-                  <FontAwesomeIcon icon={faPen} />
-                </button>
-                <button onClick={handleDeleteRecipe} className="delete-button">
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
-              </div>
+            {username && (
+              <p className="recipe-author">
+                created by{' '}
+                <Link to={`/users/${recipe.user_id}`} className="recipe-author-link">
+                  {username}
+                </Link>
+              </p>
             )}
+            <div className="recipe-title-image-container">
+              {recipe.title_img && (
+                <img
+                  src={typeof recipe.title_img === 'string' ? recipe.title_img : (recipe.title_img instanceof File ? URL.createObjectURL(recipe.title_img) : '')}
+                  alt={recipe.title}
+                  className="recipe-title-image"
+                />
+              )}
+            </div>
             <div className="recipe-info">
               <span className="recipe-time">
                 <FontAwesomeIcon icon={faStopwatch} /> 
@@ -141,17 +167,7 @@ const Recipe: React.FC = () => {
                 {recipe.diff_lvl}
               </span>
             </div>
-            <div className="recipe-title-image-container">
-              {recipe.title_img && (
-                <img
-                  src={typeof recipe.title_img === 'string' ? recipe.title_img : (recipe.title_img instanceof File ? URL.createObjectURL(recipe.title_img) : '')}
-                  alt={recipe.title}
-                  className="recipe-title-image"
-                />
-              )}
-            </div>
           </div>
-          
           <div className="recipe-details">
             <div className="recipe-content">
               {/* INGREDIENTS */}

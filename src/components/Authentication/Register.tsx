@@ -6,8 +6,6 @@ const Register: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
-  const [cookingSkill, setCookingSkill] = useState("Beginner");
-  const [profileImage, setProfileImage] = useState<File | null>(null);
   const [message, setMessage] = useState("");
   const [isRegistered, setIsRegistered] = useState(false);
 
@@ -20,10 +18,6 @@ const Register: React.FC = () => {
     formData.append("email", email);
     formData.append("password1", password1);
     formData.append("password2", password2);
-    formData.append("cooking_skill_lvl", cookingSkill);
-    if (profileImage) {
-      formData.append("profile_img", profileImage);
-    }
 
     register(formData).then(
       () => {
@@ -58,12 +52,6 @@ const Register: React.FC = () => {
           <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
           <input type="password" placeholder="Password" value={password1} onChange={(e) => setPassword1(e.target.value)} />
           <input type="password" placeholder="Confirm Password" value={password2} onChange={(e) => setPassword2(e.target.value)} />
-          <select value={cookingSkill} onChange={(e) => setCookingSkill(e.target.value)}>
-            <option value="Beginner">Beginner</option>
-            <option value="Intermediate">Intermediate</option>
-            <option value="Advanced">Advanced</option>
-          </select>
-          <input type="file" onChange={(e) => setProfileImage(e.target.files ? e.target.files[0] : null)} />
           <button type="submit">Sign Up</button>
         </form>
       ) : (
