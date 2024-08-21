@@ -1,11 +1,12 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Register from './Register';
 import Login from './Login';
 import '../../css/authentication.scss';
-import { AuthContext } from '../../contexts/AuthContext';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 
 const AuthContainer = () => {
-  const { isAuthenticated } = useContext(AuthContext) ?? { isAuthenticated: false };
+  const { isAuthenticated } = useSelector((state: RootState) => state.session);
 
   useEffect(() => {
     const signUpButton = document.getElementById('signUp');

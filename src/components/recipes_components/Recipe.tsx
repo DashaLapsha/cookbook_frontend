@@ -2,7 +2,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getRecipe, getRecipeIngredients, getRecipeSteps, deleteRecipe } from '../../services/recipes';
 import { getUserDetails } from '../../services/authn';
-import { AuthContext } from '../../contexts/AuthContext';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 import '../../css/recipes.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash, faStopwatch, faGauge } from '@fortawesome/free-solid-svg-icons';
@@ -36,7 +37,7 @@ interface RecipeData {
 const Recipe: React.FC = () => {
   const { id } = useParams<{ id: string | undefined }>();
   const navigate = useNavigate();
-  const { isAuthenticated, user } = useContext(AuthContext) || { isAuthenticated: false, user: null };
+  const { isAuthenticated, user } = useSelector((state: RootState) => state.session);
   const [recipe, setRecipe] = useState<RecipeData | null>(null);
   const [username, setUsername] = useState<string | null>(null);
   const [editMode, setEditMode] = useState(false);

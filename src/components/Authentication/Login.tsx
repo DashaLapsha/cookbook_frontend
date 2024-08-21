@@ -1,23 +1,20 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../contexts/AuthContext';
+import { useDispatch } from 'react-redux';
+import { login } from '../../store/sessionSlice';
 import { login as loginUser } from '../../services/authn';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const authContext = useContext(AuthContext);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const user = await loginUser(email, password);
-      if (authContext) {
-        authContext.login(user);
-      } else {
-        console.error('AuthContext is not available.');
-      }
+      dispatch(login(user));
       navigate('/');
     } catch (error) {
       console.error('Login failed:', error);

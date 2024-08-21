@@ -1,17 +1,16 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getUserDetails, updateUserDetails } from '../../services/authn';
 import RecipeCard from '../recipes_components/RecipeCard';
 import '../../css/profile.scss';
-import { AuthContext } from '../../contexts/AuthContext';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faCheck, faTimes, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
 const UserDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const authContext = useContext(AuthContext);
-  const isAuthenticated = authContext?.isAuthenticated || false;
-  const user = authContext?.user || null;
+  const { isAuthenticated, user } = useSelector((state: RootState) => state.session);
   const [userDetails, setUserDetails] = useState<any>(null);
   const [editMode, setEditMode] = useState(false);
   const [updatedDetails, setUpdatedDetails] = useState({
