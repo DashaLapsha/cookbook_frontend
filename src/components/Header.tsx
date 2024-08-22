@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/store';
-import { logout } from '../store/sessionSlice';
+import { logout as logoutAction } from '../store/sessionSlice';
+import { logout as logoutService } from '../services/authn';
 import '../css/header.scss';
 import logo from '../assets/logo.svg';
 
@@ -38,7 +39,8 @@ const Header: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      dispatch(logout());
+      await logoutService();
+      dispatch(logoutAction());
       navigate('/');
     } catch (error) {
       alert('Failed to logout');
