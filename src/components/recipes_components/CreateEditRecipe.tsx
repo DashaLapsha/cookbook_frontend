@@ -1,7 +1,8 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 import { createRecipe, updateRecipe } from '../../services/recipes';
-import { AuthContext } from '../../contexts/AuthContext';
 import '../../css/create_edit_recipe.scss';
 
 interface Ingredient {
@@ -34,8 +35,10 @@ interface CreateRecipeProps {
 }
 
 const CreateRecipe: React.FC<CreateRecipeProps> = ({ recipeData: initialRecipeData, isEditMode = false, recipeId, onCancel }) => {
-  const { isAuthenticated, user } = useContext(AuthContext) || { isAuthenticated: false, user: null };
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isAuthenticated, user } = useSelector((state: RootState) => state.session);
+
   const [recipeData, setRecipeData] = useState<RecipeData>({
     title: '',
     prep_time: 0,
@@ -50,6 +53,7 @@ const CreateRecipe: React.FC<CreateRecipeProps> = ({ recipeData: initialRecipeDa
       setRecipeData(initialRecipeData);
     }
   }, [initialRecipeData]);
+
 
   const handleInputChange = (field: keyof RecipeData, value: string | number | File | undefined) => {
     setRecipeData((prevData) => ({ ...prevData, [field]: value }));

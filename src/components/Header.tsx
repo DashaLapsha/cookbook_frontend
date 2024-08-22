@@ -1,14 +1,18 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { AuthContext } from '../contexts/AuthContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../store/store';
+import { logout as logoutAction } from '../store/sessionSlice';
+import { logout as logoutService } from '../services/authn';
 import '../css/header.scss';
 import logo from '../assets/logo.svg';
 
 const Header: React.FC = () => {
-  const authContext = useContext(AuthContext);
-  const [isSticky, setIsSticky] = useState(false);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const { isAuthenticated, user } = useSelector((state: RootState) => state.session);
+  const [isSticky, setIsSticky] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,21 +37,11 @@ const Header: React.FC = () => {
     }
   }, [location.pathname]);
 
-  if (!authContext) {
-    return null;
-  }
-
-  const { isAuthenticated, user, logout } = authContext;
-
   const handleLogout = async () => {
     try {
-      if (authContext) {
-        await logout();
-        logout();
-        navigate('/');
-      } else {
-        throw new Error('Authentication context is not available');
-      }
+      await logoutService();
+      dispatch(logoutAction());
+      navigate('/');
     } catch (error) {
       alert('Failed to logout');
     }

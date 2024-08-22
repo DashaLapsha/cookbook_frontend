@@ -60,3 +60,7 @@ export const getUserDetails = (id: number) => {
 export const updateUserDetails = (id: number, data: FormData) => {
   return api.put(`${AUTH_URL}${id}/`, data);
 };
+
+export const checkSession = () => {
+  return api.get(`${AUTH_URL}session-check/`);
+};
