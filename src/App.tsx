@@ -15,7 +15,6 @@ import withAuth from './components/Authentication/withAuth';
 
 const ProtectedUserDetails = withAuth(UserDetails);
 const ProtectedCreateRecipe = withAuth(CreateRecipe);
-const ProtectedRecipe = withAuth(Recipe);
 
 function App() {
   return (
@@ -24,7 +23,7 @@ function App() {
       <Header />
       <Routes>
         <Route path="/recipes" element={<Recipes />} />
-        <Route path="/recipes/:id" element={<ProtectedRecipe />} />
+        <Route path="/recipes/:id" element={<Recipe />} />
         <Route path="/recipes/add" element={<ProtectedCreateRecipe />} />
         <Route path="/auth" element={<AuthContainer />} />
         <Route path="/users/:id" element={<ProtectedUserDetails />} />

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getRecipe, getRecipeIngredients, getRecipeSteps, deleteRecipe } from '../../services/recipes';
-import { getUserDetails } from '../../services/authn';
+import { getUserDetails, checkSession } from '../../services/authn';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import '../../css/recipes.scss';
